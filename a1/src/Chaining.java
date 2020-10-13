@@ -45,7 +45,7 @@ public class Chaining {
 
     /**Implements the hash function h(k) using multiplication method*/
     public int chain (int key) {
-        return ((this.A * key) % power2(this.w)) >> (this.w - this. r);
+        return ((this.A * key) % power2(this.w)) >> (this.w - this.r);
     }
         
     
@@ -53,27 +53,20 @@ public class Chaining {
     public int insertKey(int key){
         /* collisions here are number of keys already in the same bin which we want to insert the key */
         int collisions=0;
-        // going thru whole table
-//        for (int i=0; i<Table.size(); i++) {
-//            if (Table.get(i).size() > 0) {
-//                collisions++;
-//            }
-//            else {
-//                Table.get(i).set(0, key);
-//                break;
-//            }
-//        }
+
+        /* the bin corresponding to the index returned by hash (chain) function */
         ArrayList<Integer> bin = Table.get(chain(key));
 
-        // just iterating thru the bin we want to find an open slot
-        for(int i=0; i<bin.size(); i++) {
-            if(bin.get(i) != null ){
+        /* iterate through list whilst incrementing collisions (because there's no deletion here) */
+        for (Integer i : bin) {
+            if(i != null) {
                 collisions++;
-            }else{
-                bin.set(i, key);
-                break;
             }
         }
+
+        /* append our key to the end of the list */
+        bin.add(key);
+
         return collisions;
     }
 
