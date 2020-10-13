@@ -58,10 +58,8 @@ public class Chaining {
         ArrayList<Integer> bin = Table.get(chain(key));
 
         /* iterate through list whilst incrementing collisions (because there's no deletion here) */
-        for (Integer i : bin) {
-            if(i != null) {
-                collisions++;
-            }
+        for (int i : bin) {
+            collisions++;
         }
 
         /* append our key to the end of the list */
