@@ -51,9 +51,30 @@ public class Chaining {
     
     /**Inserts key k into hash table. Returns the number of collisions encountered*/
     public int insertKey(int key){
-        //TODO: implement this and change the return statement
-        return -1;
+        /* collisions here are number of keys already in the same bin which we want to insert the key */
+        int collisions=0;
+        // going thru whole table
+//        for (int i=0; i<Table.size(); i++) {
+//            if (Table.get(i).size() > 0) {
+//                collisions++;
+//            }
+//            else {
+//                Table.get(i).set(0, key);
+//                break;
+//            }
+//        }
+        ArrayList<Integer> bin = Table.get(key);
 
+        // just iterating thru the bin we want to find an open slot
+        for(int i=0; i<bin.size(); i++) {
+            if(bin.get(i) != null ){
+                collisions++;
+            }else{
+                bin.set(i, key);
+                break;
+            }
+        }
+        return collisions;
     }
 
     
