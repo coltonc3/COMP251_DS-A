@@ -63,7 +63,7 @@ public class Chaining {
 //                break;
 //            }
 //        }
-        ArrayList<Integer> bin = Table.get(key);
+        ArrayList<Integer> bin = Table.get(chain(key));
 
         // just iterating thru the bin we want to find an open slot
         for(int i=0; i<bin.size(); i++) {
