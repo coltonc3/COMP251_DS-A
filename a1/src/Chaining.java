@@ -55,7 +55,7 @@ public class Chaining {
         int collisions=0;
 
         /* the bin corresponding to the index returned by hash (chain) function */
-        ArrayList<Integer> bin = Table.get(chain(key));
+        ArrayList<Integer> bin = this.Table.get(chain(key));
 
         /* iterate through list whilst incrementing collisions (because there's no deletion here) */
         for (int i : bin) {

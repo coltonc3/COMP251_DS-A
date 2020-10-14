@@ -64,8 +64,13 @@ public class Open_Addressing {
          /* list of indices that have already been visited so we don't overcount collsions */
          ArrayList<Integer> visited = new ArrayList<>();
 
-         while(Table[index] != -1 && collisions < Table.length) {
+         /* continuously call hash function until we find an open slot in the Table,
+          * stop when # of collisions is equal to Table length
+          */
+         while(this.Table[index] != -1 && collisions < this.Table.length) {
              probeCounter++;
+
+             /* this is to avoid double-counting visited slots for counting collisions */
              if (!visited.contains((index))) {
                  collisions++;
                  visited.add(index);
@@ -73,8 +78,9 @@ public class Open_Addressing {
              index = probe(key, probeCounter);
          }
 
-         if(collisions < Table.length)
-            Table[index] = key;
+         /* only change Table if there's an available slot for our key */
+         if(collisions < this.Table.length)
+            this.Table[index] = key;
 
          return collisions;
      }
@@ -82,7 +88,6 @@ public class Open_Addressing {
 
      /**Sequentially inserts a list of keys into the HashTable. Outputs total number of collisions */
      public int insertKeyArray (int[] keyArray){
-         //TODO
          int collision = 0;
          for (int key: keyArray) {
              collision += insertKey(key);
@@ -93,19 +98,20 @@ public class Open_Addressing {
 
      /**Removes key k from hash table. Returns the number of slots visited*/
      public int removeKey(int key){
-         int visited = 0;
+         int visited = 0; // number of collisions encountered before finding the key for removal
          int probeCounter = 0;
          int index = probe(key, probeCounter);
 
          /* increment probeCounter and continue running probe hash function until we find the key we're looking for */
-         while (this.Table[index] != key && visited < Table.length) {
+         while (this.Table[index] != key && visited < this.Table.length) {
              visited++;
              probeCounter++;
              index = probe(key, probeCounter);
          }
 
-         /* replace removed key with -1 */
-         this.Table[index] = -1;
+         /* replace key with -1 if # of collisions is less than Table length */
+         if (visited<this.Table.length)
+            this.Table[index] = -1;
          return visited;
      }
 }
