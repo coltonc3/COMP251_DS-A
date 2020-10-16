@@ -51,16 +51,11 @@ public class Chaining {
     
     /**Inserts key k into hash table. Returns the number of collisions encountered*/
     public int insertKey(int key){
-        /* collisions here are number of keys already in the same bin which we want to insert the key */
-        int collisions=0;
-
         /* the bin corresponding to the index returned by hash (chain) function */
         ArrayList<Integer> bin = this.Table.get(chain(key));
 
-        /* iterate through list whilst incrementing collisions (because there's no deletion here) */
-        for (int i : bin) {
-            collisions++;
-        }
+        /* collisions here are number of keys already in the same bin which we want to insert the key */
+        int collisions = bin.size();
 
         /* append our key to the end of the list */
         bin.add(key);
