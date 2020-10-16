@@ -65,9 +65,9 @@ public class Open_Addressing {
          ArrayList<Integer> visited = new ArrayList<>();
 
          /* continuously call hash function until we find an open slot in the Table,
-          * stop when # of collisions is equal to Table length
+          * stop when probeCounter=m-1 (# of collisions is equal to Table length)
           */
-         while(this.Table[index] != -1 && collisions < this.Table.length) {
+         while(this.Table[index] != -1 && probeCounter < this.m) {
              probeCounter++;
 
              /* this is to avoid double-counting visited slots for counting collisions */
@@ -79,7 +79,7 @@ public class Open_Addressing {
          }
 
          /* only change Table if there's an available slot for our key */
-         if(collisions < this.Table.length)
+         if(probeCounter < this.m-1)
             this.Table[index] = key;
 
          return collisions;
