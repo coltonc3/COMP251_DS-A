@@ -24,6 +24,7 @@ public class DisjointSets {
             rank = new int[n];
             for (int i=0; i<this.par.length; i++) {
                 par[i] = i;
+                rank[i] = 0;
             }
         }
     }
@@ -52,20 +53,35 @@ public class DisjointSets {
         return output;
     }
     
-    /* find resentative of element i */
+    /* find representative of element i and do path compression along the way */
     public int find(int i) {
-
-        /* Fill this method (The statement return 0 is here only to compile) */
-        return 0;
-        
+        if (par[i] == i) {
+            return i;
+        }
+        else {
+            par[i] = find(par[i]); // path compression - make all nodes on the find path direct children of the root
+            return par[i];
+        }
     }
 
-    /* merge sets containing elements i and j */
+    /* merge sets containing elements i and j by merging the set with the smaller rank into the set with the larger rank
+    * if both ranks are the same, merge set containing i into st containing j
+    * @return the representative of the new merged set
+    * */
     public int union(int i, int j) {
-    
-        /* Fill this method (The statement return 0 is here only to compile) */
-        return 0;
-        
+        int repI = find(i); // representative of set containing i
+        int repJ = find(j); // representative of set containing j
+        if (rank[i] <= rank[j]) {
+            par[repI] = repJ;
+            if (rank[i] == rank[j]) {
+                rank[j]++;
+            }
+            return repJ;
+        }
+        else {
+            par[repJ] = repI;
+            return repI;
+        }
     }
     
     public static void main(String[] args) {
