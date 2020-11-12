@@ -23,14 +23,20 @@ class Assignment implements Comparator<Assignment>{
 	 */
 	@Override
 	public int compare(Assignment a1, Assignment a2) {
-		if (a1.weight < a2.weight) {
-			return 1;
-		}
-		else if (a1.weight > a2.weight) {
+		if (a1.deadline < a2.deadline)
 			return -1;
-		}
+		else if (a1.deadline > a2.deadline)
+			return 1;
 		else {
-			return 0;
+			if (a1.weight < a2.weight) {
+				return 1;
+			}
+			else if (a1.weight > a2.weight) {
+				return -1;
+			}
+			else {
+				return 0;
+			}
 		}
 	}
 }
@@ -72,14 +78,10 @@ public class HW_Sched {
 
 		for(int i=0; i < homeworkPlan.length; i++) {
 			for(int j=0; j < m; j++) {
-				if (Assignments.get(j).deadline <= i+1) {
+				if (Assignments.get(j).deadline > i) {
 					homeworkPlan[i] = Assignments.get(j).number;
-					int newHour = i+1;
 
-					// filter out Assignments with deadlines that are no longer compatible with the current time slot
-					Assignments.removeIf(a -> a.deadline < newHour);
-					m = Assignments.size();
-					Collections.sort(Assignments, new Assignment());
+					Assignments.get(j).deadline = -1;
 
 					break;
 				}
