@@ -18,14 +18,26 @@ class Assignment implements Comparator<Assignment>{
 	
 	
 	/**
-	 * This method is used to sort to compare assignment objects for sorting. 
+	 * This method is used to sort to compare assignment objects for sorting.
+	 * Compare by deadline, then weight if deadlines are the same
 	 */
 	@Override
 	public int compare(Assignment a1, Assignment a2) {
-		// TODO Implement this
-		
-		
-		return 0;
+		if(a1.deadline > a2.deadline) {
+			return 1;
+		}
+		else if (a1.deadline < a2.deadline) {
+			return -1;
+		}
+		else {
+			if (a1.weight > a2.weight) {
+				return -1;
+			}
+			else if (a1.weight < a2.weight) {
+				return 1;
+			}
+			return 0;
+		}
 	}
 }
 
@@ -52,26 +64,28 @@ public class HW_Sched {
 	 * that will be done at time i.
 	 */
 	public int[] SelectAssignments() {
-		//TODO Implement this
-		
 		//Sort assignments
 		//Order will depend on how compare function is implemented
 		Collections.sort(Assignments, new Assignment());
 		
 		// If schedule[i] has a value -1, it indicates that the 
 		// i'th timeslot in the schedule is empty
-		int[] schedule = new int[lastDeadline];
-		for (int i=0; i < schedule.length; ++i) {
-			schedule[i] = -1;
+		int[] homeworkPlan = new int[lastDeadline];
+		for (int i=0; i < homeworkPlan.length; ++i) {
+			homeworkPlan[i] = -1;
 		}
-		
-		
-		
-		
-		
-	
-		
-		return schedule;
+
+		for(int i=0; i < homeworkPlan.length; i++) {
+			for(int j=0; j < m; j++) {
+				if (Assignments.get(j).deadline > i) {
+					homeworkPlan[i] = Assignments.get(j).number;
+					// if we put assignment in a slot, set assignment deadline to -1 so we don't use it again
+					Assignments.get(j).deadline = -1;
+					break;
+				}
+			}
+		}
+		return homeworkPlan;
 	}
 }
 	
