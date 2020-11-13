@@ -20,7 +20,7 @@ class Assignment implements Comparator<Assignment>{
 
 	/**
 	 * This method is used to sort to compare assignment objects for sorting.
-	 * Assignments are sorted by monotonic decreasing weight.
+	 * Assignments are sorted by monotonic increasing deadline, then decreasing weight.
 	 */
 	@Override
 	public int compare(Assignment a1, Assignment a2) {
