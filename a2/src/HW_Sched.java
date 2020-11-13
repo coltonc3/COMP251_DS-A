@@ -1,5 +1,6 @@
 import java.util.*;
 
+/* NO COLLABORATORS */
 class Assignment implements Comparator<Assignment>{
 	int number;
 	int weight;

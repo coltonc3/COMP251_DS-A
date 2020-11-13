@@ -10,7 +10,7 @@ import java.util.*;
 *
 *****************************/
 
-
+/* NO COLLABORATORS */
 public class DisjointSets {
 
     private int[] par;

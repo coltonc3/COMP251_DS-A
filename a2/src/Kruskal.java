@@ -1,5 +1,7 @@
 import java.util.*;
 
+
+/* NO COLLABORATORS */
 public class Kruskal{
 
     /* take a graph object of the class WGraph as an input
