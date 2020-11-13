@@ -23,29 +23,20 @@ class Assignment implements Comparator<Assignment>{
 	 */
 	@Override
 	public int compare(Assignment a1, Assignment a2) {
-//		if (a1.deadline < a2.deadline)
-//			return -1;
-//		else if (a1.deadline > a2.deadline)
-//			return 1;
-//		else {
-//			if (a1.weight < a2.weight) {
-//				return 1;
-//			}
-//			else if (a1.weight > a2.weight) {
-//				return -1;
-//			}
-//			else {
-//				return 0;
-//			}
-//		}
-		if (a1.weight < a2.weight) {
+		if (a1.deadline < a2.deadline)
 			return -1;
-		}
-		else if (a1.weight > a2.weight) {
+		else if (a1.deadline > a2.deadline)
 			return 1;
-		}
 		else {
-			return 0;
+			if (a1.weight < a2.weight) {
+				return 1;
+			}
+			else if (a1.weight > a2.weight) {
+				return -1;
+			}
+			else {
+				return 0;
+			}
 		}
 	}
 }
@@ -84,23 +75,21 @@ public class HW_Sched {
 			homeworkPlan[i] = -1;
 		}
 
+		// make a deep copy of Assignments
+		ArrayList<Assignment> AssignmentsCopy = new ArrayList<Assignment>();
+		for (Assignment a : Assignments) {
+			AssignmentsCopy.add(new Assignment(a.number, a.weight, a.deadline));
+		}
 
-//		for(int i=0; i < homeworkPlan.length; i++) {
-//			for(int j=0; j < m; j++) {
-//				if (Assignments.get(j).deadline > i) {
-//					homeworkPlan[i] = Assignments.get(j).number;
-//
-//					Assignments.get(j).deadline = -1;
-//
-//					break;
-//				}
-//			}
-//		}
-		for(int j=0; j<m; j++) {
-			for (int i=0; i<homeworkPlan.length; i++){
-				if (Assignments.get(j).deadline <= i+1) {
-					homeworkPlan[i] = Assignments.get(j).number;
-//					Assignments.get(j).deadline = -1;
+
+		for(int i=0; i < homeworkPlan.length; i++) {
+			for(int j=0; j < m; j++) {
+				if (AssignmentsCopy.get(j).deadline > i) {
+					homeworkPlan[i] = AssignmentsCopy.get(j).number;
+
+					// set deadline to -1 so we don't use it again
+					AssignmentsCopy.get(j).deadline = -1;
+
 					break;
 				}
 			}
