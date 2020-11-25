@@ -103,8 +103,7 @@ public class FordFulkerson {
 
 
 	public static void main(String[] args) {
-		// String file = args[0];
-		String file = "/Users/coltoncampbell/Desktop/School/F2020/COMP251/assignments/a3/ff2.txt";
+		String file = args[0];
 		File f = new File(file);
 		WGraph g = new WGraph(file);
 		System.out.println(fordfulkerson(g));
@@ -119,23 +118,17 @@ public class FordFulkerson {
 		else {
 			// update edges
 			for (Edge e : path) {
-				Edge edge_in_og_graph = original.getEdge(e.nodes[0], e.nodes[1]);
-				if (edge_in_og_graph != null) { // then e is a forward edge
-					e.weight -= bottleneck;
-					// corresponding forward/backward edge
-					Edge matching_edge = residual.getEdge(e.nodes[1], e.nodes[0]);
-					matching_edge.weight += bottleneck;
-				} 
-				else { // then e is a backward edge
-					e.weight -= bottleneck;
-					// corresponding forward edge
-					Edge forward_edge = residual.getEdge(e.nodes[1], e.nodes[0]);
-					forward_edge.weight += bottleneck;
-				}
+				e.weight -= bottleneck;
+				// corresponding forward/backward edge also needs to be udpated
+				Edge matching_edge = residual.getEdge(e.nodes[1], e.nodes[0]);
+				matching_edge.weight += bottleneck;
 			}
 		}
 	}
 
+	/* the bottleneck is the minimum amount of residual capacity along the edges of a path
+	 * this method computes the bottleneck using the original graph g to get fixed capacities
+	 */
 	private static int getBottleneck(WGraph g, ArrayList<Edge> path) {
 		int capacity = g.getEdge(path.get(0).nodes[0], path.get(0).nodes[1]).weight;
 		int flow = path.get(0).weight;
@@ -144,8 +137,9 @@ public class FordFulkerson {
 			flow = e.weight;
 			int residual;
 			if (g.getEdge(e.nodes[0], e.nodes[1]) != null) { // forward edge
-				residual = e.weight;
-			} else { // backward edge
+				residual = flow;
+			} 
+			else { // backward edge
 				capacity = g.getEdge(e.nodes[1], e.nodes[0]).weight;
 				residual = capacity - flow;
 			}
@@ -156,13 +150,13 @@ public class FordFulkerson {
 		return bottleneck;
 	}
 	
+	/* method to initialize the residual graph */
 	private static void makeResidual(WGraph original, WGraph modifiable_graph) {
 		for (Edge e : original.getEdges()) {
 			Edge modifiable_edge = modifiable_graph.getEdge(e.nodes[0], e.nodes[1]);
 			int capacity = e.weight;
 			int flow = modifiable_edge.weight;
 			if (flow < capacity) {
-				// Edge forward_edge = new Edge(modifiable_edge.nodes[0], modifiable_edge.nodes[1], capacity - flow);
 				modifiable_graph.setEdge(modifiable_edge.nodes[0], modifiable_edge.nodes[1], capacity - flow);
 			}
 			if (flow >= 0) {
