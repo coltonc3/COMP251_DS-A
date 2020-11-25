@@ -11,6 +11,11 @@ class Edge{
         this.nodes[1] = j;
         this.weight = w;
     }
+
+    public int getNextNode(int v) {
+        int next = this.nodes[1];
+        return next;
+    }
 }
 
 public class WGraph{
