@@ -1,3 +1,5 @@
+/* NO COLLABORATORS */
+
 import java.util.*;
 
 public class BellmanFord{
@@ -18,33 +20,82 @@ public class BellmanFord{
         }
     }
 
-    class PathDoesNotExistException extends BellmanFordException{
-        public PathDoesNotExistException(String str){
+    class PathDoesNotExistException extends BellmanFordException {
+        public PathDoesNotExistException(String str) {
             super(str);
         }
     }
+    
 
-    BellmanFord(WGraph g, int source) throws NegativeWeightException{
-        /* Constructor, input a graph and a source
-         * Computes the Bellman Ford algorithm to populate the
-         * attributes 
-         *  distances - at position "n" the distance of node "n" to the source is kept
-         *  predecessors - at position "n" the predecessor of node "n" on the path
-         *                 to the source is kept
-         *  source - the source node
-         *
-         *  If the node is not reachable from the source, the
-         *  distance value must be Integer.MAX_VALUE
-         */
+    /* Constructor, input a graph and a source
+    * Computes the Bellman Ford algorithm to populate the
+    * attributes 
+    *  distances - at position "n" the distance of node "n" to the source is kept
+    *  predecessors - at position "n" the predecessor of node "n" on the path
+    *                 to the source is kept
+    *  source - the source node
+    *
+    *  If the node is not reachable from the source, the
+    *  distance value must be Integer.MAX_VALUE
+    */
+    BellmanFord(WGraph g, int source) throws NegativeWeightException {
 
+        /* initialize attributes */
+        this.source = source;
+        this.distances = new int[g.getNbNodes()];
+        this.predecessors = new int[g.getNbNodes()];
+
+        /* initialize distances and predecessors */
+        this.distances[source] = 0;
+        this.predecessors[source] = -1;
+        for (int i = 0; i < distances.length; i++) {
+            if (i != source) {
+                this.distances[i] = Integer.MAX_VALUE;
+                this.predecessors[i] = Integer.MIN_VALUE;
+            }
+        }
+
+        /* relax edges along paths of increasing size from 0 to |V(G)|-1 */
+        for (int i = 0; i < this.distances.length; i++) {
+            for (Edge e : g.listOfEdgesSorted()) {
+                relax(g, e.nodes[0], e.nodes[1], e.weight);
+            }
+        }
+
+        /* check for negative cycle and throw error if found */
+        for (Edge e : g.listOfEdgesSorted()) {
+            if (distances[e.nodes[1]] > distances[e.nodes[0]] + e.weight) {
+                throw new NegativeWeightException("negative weight");
+            }
+        }
     }
+    
 
+    /*Returns the list of nodes along the shortest path from 
+    * the object source to the input destination
+    * If not path exists an Error is thrown
+    */
     public int[] shortestPath(int destination) throws PathDoesNotExistException{
-        /*Returns the list of nodes along the shortest path from 
-         * the object source to the input destination
-         * If not path exists an Error is thrown
-         */
-        return null;
+        ArrayList<Integer> path_backward = new ArrayList<>();
+        int cur_node = destination;
+
+        /* backtrace from destination to source using each node's "predecessor" */
+        while (cur_node != -1) {
+            if (this.predecessors[cur_node] == Integer.MIN_VALUE) {
+                throw new PathDoesNotExistException("no patho amigo");
+            } else {
+                path_backward.add(cur_node);
+                cur_node = this.predecessors[cur_node];
+            }
+        }
+        
+        /* reverse the backward path list and copy into array */
+        int[] path = new int[path_backward.size()];
+        for (int i = 0; i < path.length; i++) {
+            path[i] = path_backward.get(path.length - (i+1));
+        }
+        
+        return path;
     }
 
     public void printPath(int destination){
@@ -69,18 +120,27 @@ public class BellmanFord{
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
-        String file = args[0];
+        // String file = args[0];
+        String file = "/Users/coltoncampbell/Desktop/School/F2020/COMP251/assignments/a3/bf1.txt";
         WGraph g = new WGraph(file);
-        try{
+        try {
             BellmanFord bf = new BellmanFord(g, g.getSource());
             bf.printPath(g.getDestination());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
-   } 
+    }
+
+
+    /* helper method for relaxing edges in a graph */
+    private void relax(WGraph g, int u, int v, int weight) {
+        if (this.distances[v] > this.distances[u] + weight) {
+            this.distances[v] = this.distances[u] + weight;
+            this.predecessors[v] = u;
+        }
+    }
 }
 
