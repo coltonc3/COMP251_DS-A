@@ -56,14 +56,14 @@ public class BellmanFord{
         }
 
         /* relax edges along paths of increasing size from 0 to |V(G)|-1 */
-        for (int i = 0; i < this.distances.length; i++) {
-            for (Edge e : g.listOfEdgesSorted()) {
+        for (int i = 0; i < this.distances.length-1; i++) {
+            for (Edge e : g.getEdges()) {
                 relax(g, e.nodes[0], e.nodes[1], e.weight);
             }
         }
 
         /* check for negative cycle and throw error if found */
-        for (Edge e : g.listOfEdgesSorted()) {
+        for (Edge e : g.getEdges()) {
             if (distances[e.nodes[1]] > distances[e.nodes[0]] + e.weight) {
                 throw new NegativeWeightException("negative weight");
             }
@@ -73,7 +73,7 @@ public class BellmanFord{
 
     /*Returns the list of nodes along the shortest path from 
     * the object source to the input destination
-    * If not path exists an Error is thrown
+    * If no path exists an Error is thrown
     */
     public int[] shortestPath(int destination) throws PathDoesNotExistException{
         ArrayList<Integer> path_backward = new ArrayList<>();
@@ -122,8 +122,7 @@ public class BellmanFord{
 
     public static void main(String[] args) {
 
-        // String file = args[0];
-        String file = "/Users/coltoncampbell/Desktop/School/F2020/COMP251/assignments/a3/bf1.txt";
+        String file = args[0];
         WGraph g = new WGraph(file);
         try {
             BellmanFord bf = new BellmanFord(g, g.getSource());

@@ -73,16 +73,26 @@ public class FordFulkerson {
 		makeResidual(graph, residual);
 
 		ArrayList<Edge> edge_path = new ArrayList<>();
+		/* get vertices of DFS path */
 		ArrayList<Integer> vertex_path = pathDFS(residual.getSource(), residual.getDestination(), residual);
 	
 		while (!vertex_path.isEmpty()) {
+			/* clear previous path */
 			edge_path.clear();
+
+			/* re-initialize DFS edge path */
 			for (int i = 0; i < vertex_path.size() - 1; i++) {
 				edge_path.add(residual.getEdge(vertex_path.get(i), vertex_path.get(i + 1)));
 			}
+
+			/* can't add flow to a path with a bottleneck of 0 */
 			if (getBottleneck(graph, edge_path) == 0)
 				break;
+
+			/* augment residual path using the DFS edge path as the augmenting path */
 			augment(graph, residual, edge_path);
+
+			/* update DFS vertex path before next iteration */
 			vertex_path = pathDFS(residual.getSource(), residual.getDestination(), residual);
 		}
 	
